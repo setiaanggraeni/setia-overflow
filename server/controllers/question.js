@@ -32,7 +32,7 @@ class QuestionController{
   static getById(req, res){
     let id = req.params.id
     Question.findOne({_id: id})
-    .populate('answers')
+    .populate('answerId')
     .populate('userId')
     .populate('downvote')
     .populate('upvote')
@@ -158,7 +158,6 @@ class QuestionController{
           $set: {votes: question.upvote.length}
         })
         .then(result => {
-          question.votes -= 1
           res.status(201).json(result)
         })
         .catch(err => {

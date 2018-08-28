@@ -3,6 +3,8 @@ const Question = require('../models/question')
 
 class AnswerController {
   static addAnswer(req, res){
+    console.log('masuk sini answer');
+    
     let questionId = req.params.id
     let {answer} = req.body
         Answer.create({

@@ -47,7 +47,10 @@ class UserController{
       }
     })
     .catch(err => {
-      res.status(400).json(err)
+      res.status(400).json({
+        err,
+        message: 'Register failed!'
+      })
     })
   }
 
@@ -71,6 +74,12 @@ class UserController{
           message: 'Email not found!'
         })
       }
+    })
+    .catch(err => {
+      res.status(400).json({
+        err,
+        message: 'User not found!'
+      })
     })
   }
 }
