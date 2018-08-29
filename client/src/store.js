@@ -26,7 +26,8 @@ export default new Vuex.Store({
     postQuestionTrue: true,
     dataEdit: '',
     seen: false,
-    dataEditAnswer: ''
+    dataEditAnswer: '',
+    newUser: ''
   },
   mutations: {
     setIsLogin (state, payload) {
@@ -70,6 +71,9 @@ export default new Vuex.Store({
     },
     setQuestionTrue (state, payload) {
       state.questionTrue = payload
+    },
+    setNewUser (state, payload) {
+      state.newUser = payload
     }
   },
   actions: {
@@ -99,7 +103,11 @@ export default new Vuex.Store({
       })
         .then(newUser => {
           localStorage.setItem('token', newUser.data.token)
-          this.state.isLogin = false
+          context.commit('setIsLogin', false)
+          context.commit('setCommentTrue', true)
+          context.commit('setSeen', true)
+          context.commit('setNewUser', newUser.data.user)
+          context.dispatch('sendEmail')
         })
         .catch(err => {
           swal('Ups!', err.response.data.message, 'warning')
@@ -159,7 +167,7 @@ export default new Vuex.Store({
         .then(commentDel => {
           console.log('Question deleted!')
           router.push('/')
-          this.state.questionTrue = false
+          context.commit('setQuestionTrue', false)
         })
         .catch(err => {
           console.log(err)
@@ -317,6 +325,41 @@ export default new Vuex.Store({
             swal('Ups!', err.response.data.message, 'warning')
           })
       })
-    }
+    },
+    checkVerify (context) {
+      let token = localStorage.getItem('token')
+      axios.get(baseUrl + '/users/verify', {
+        headers: {
+          token: token
+        }
+      })
+        .then(user => {
+          if (user) {
+            context.commit('setIsLogin', false)
+            context.commit('setCommentTrue', true)
+            context.commit('setSeen', true)
+          }
+        })
+        .catch(err => {
+          console.log(err.response.data)
+        })
+    },
+    sendEmail (context) {
+      let token = localStorage.getItem('token')
+      axios.post(baseUrl + '/users/sendmail', {
+        email: this.state.newUser.email,
+        name: this.state.newUser.name
+      }, {
+        headers: {
+          token: token
+        }
+      })
+        .then(emailSent => {
+          console.log('email sent')
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
   }
 })

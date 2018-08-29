@@ -99,10 +99,6 @@ export default {
   color:blue;
   margin-right:5px;
 }
-#addComment{
-  // float: right;
-  // margin-right: 20px;
-}
 #posted{
   color: gray;
   font-size: 10px;

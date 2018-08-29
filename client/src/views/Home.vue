@@ -106,12 +106,7 @@ export default {
     }
   },
   created () {
-    let token = localStorage.getItem('token')
-    if (token) {
-      this.isLogin = false
-      this.commenttrue = true
-      this.seen = true
-    }
+    this.checkVerify()
   },
   mounted () {
     this.getAllQuestions()
@@ -122,7 +117,7 @@ export default {
   },
   methods: {
     ...mapActions([
-      'logout', 'getAllQuestions', 'getById'
+      'logout', 'getAllQuestions', 'getById', 'checkVerify'
     ])
   }
 }

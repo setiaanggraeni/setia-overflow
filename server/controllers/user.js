@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 require('dotenv').config()
 const axios = require('axios')
+var nodemailer = require('nodemailer')
 
 var salt = bcrypt.genSaltSync(8)
 
@@ -25,7 +26,7 @@ class UserController{
             .then(user => {
               if(user){
                 jwt.sign({id: user._id, name: user.name, email: user.email}, process.env.secretKey, function(err, token) {
-                  res.status(201).json({token: token})
+                  res.status(201).json({token: token, user: user})
                 })
               } else {
                 res.status(400).json({
@@ -150,6 +151,41 @@ class UserController{
             message: 'fb error'
         })
     })
+  }
+
+  static sendMail(req, res){
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: `${process.env.email}`,
+        pass: `${process.env.emailpass}`
+      }
+    })
+      
+    var mailOptions = {
+      from: `${process.env.email}`,
+      to: `${req.body.email}`,
+      subject: 'Hacktiv-Overflow Setia Anggraeni',
+      text: `Enjoy to sharing with Setia-Hacktiv-Overflow ${req.body.name}`
+    }
+      
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        res.status(500).json(error.message)
+      } else {
+        res.status(200).json(info.response)
+      }
+    })
+  }
+
+  static verify (req, res) {
+    if (req.user !== undefined) {
+      res.status(201).json(req.user)
+    } else {
+      res.status(400).json({
+        message: 'Token invalid'
+      })
+    }
   }
 }
 

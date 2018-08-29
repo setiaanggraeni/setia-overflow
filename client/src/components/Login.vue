@@ -17,7 +17,7 @@
           </div>
           <div class="modal-footer">
             <div class="g-signin2" data-onsuccess="onSignIn"></div>
-            <small id="register" class="form-text text-muted"><img src="../assets/facebook.png" width="150px" id="fbicon" @click="loginFb" data-dismiss="modal"/></small>
+            <img src="../assets/facebook.png" width="150px" id="fbicon" @click="loginFb" data-dismiss="modal"/>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             <button type="button" class="btn btn-primary" @click="login" data-dismiss="modal">Login</button>
           </div>
