@@ -129,7 +129,7 @@ class UserController{
         } else {
           let compare = bcrypt.compareSync(response.data.id, user.password)
           if(compare){
-            jwt.sign({id: user._id, name: user.name}, process.env.secretKey, (err, token) => {
+            jwt.sign({id: user._id, name: user.name, email: user.email}, process.env.secretKey, (err, token) => {
               if(err) res.status(401).json('Failed to sign token')
               res.status(201).json({token: token})
             })

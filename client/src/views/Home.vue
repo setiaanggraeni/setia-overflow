@@ -16,7 +16,9 @@
               <EditComment/>
             </div>
             <div v-else>
-              <TheQuestion/>
+              <TheQuestion :commenttrue="this.commenttrue" :seen="this.seen"/>
+              <EditQuestion/>
+              <EditComment/>
             </div>
           </div>
         </div>

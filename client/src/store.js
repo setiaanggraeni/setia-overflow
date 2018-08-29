@@ -174,6 +174,7 @@ export default new Vuex.Store({
           console.log('Question deleted!')
           router.push('/')
           context.commit('setQuestionTrue', false)
+          context.dispatch('getAllQuestions')
         })
         .catch(err => {
           console.log(err)
@@ -225,6 +226,7 @@ export default new Vuex.Store({
       })
         .then(commentDel => {
           console.log('Answer deleted!')
+
         })
         .catch(err => {
           swal('Ups!', err.response.data.message, 'warning')
