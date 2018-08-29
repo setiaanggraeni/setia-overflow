@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import router from './router'
 // import swal from 'sweetalert'
 var baseUrl = 'http://localhost:3000'
 
@@ -23,7 +24,8 @@ export default new Vuex.Store({
     title: '',
     postQuestionTrue: true,
     dataEdit: '',
-    seen: false
+    seen: false,
+    dataEditAnswer: ''
   },
   mutations: {
     setIsLogin (state, payload) {
@@ -146,13 +148,35 @@ export default new Vuex.Store({
     },
     deleteQuestion (context, payload) {
       let token = localStorage.getItem('token')
-      axios.post(baseUrl + `/questions/delete/${payload}`, {}, {
+      axios.delete(baseUrl + `/questions/delete/${payload}`, {
         headers: {
           token: token
         }
       })
         .then(commentDel => {
           console.log('Question deleted!')
+          router.push('/')
+        })
+        .catch(err => {
+          console.log(err)
+          swal('Ups!', 'You have no access to delete this question!', 'warning')
+        })
+    },
+    forEditAnswer (context, payload) {
+      this.state.dataEditAnswer = payload
+    },
+    editAnswer (context, payload) {
+      console.log(payload)
+      let token = localStorage.getItem('token')
+      axios.put(baseUrl + `/answers/edit/${payload._id}`, {
+        answer: payload.answer
+      }, {
+        headers: {
+          token: token
+        }
+      })
+        .then(commentDel => {
+          console.log('Answer edited!')
         })
         .catch(err => {
           swal('Ups!', err.response.data.message, 'warning')
@@ -177,7 +201,7 @@ export default new Vuex.Store({
     },
     deleteComment (context, payload) {
       let token = localStorage.getItem('token')
-      axios.post(baseUrl + `/answers/delete/${payload}`, {}, {
+      axios.delete(baseUrl + `/answers/delete/${payload}`, {
         headers: {
           token: token
         }
@@ -233,7 +257,37 @@ export default new Vuex.Store({
         .then(newQuestion => {
           this.state.title = ''
           this.state.theQuestion = ''
+          this.state.postQuestionTrue = true
           swal('Posted!', 'Thank you for submitting question!', 'success')
+        })
+        .catch(err => {
+          swal('Ups!', err.response.data.message, 'warning')
+        })
+    },
+    upvoteAnswer (context, payload) {
+      let token = localStorage.getItem('token')
+      axios.put(baseUrl + `/answers/upvote/${payload}`, {}, {
+        headers: {
+          token: token
+        }
+      })
+        .then(upvoted => {
+          swal('Yeayyy!', 'Thanks for like!', 'success')
+        })
+        .catch(err => {
+          console.log(err)
+          swal('Ups!', 'You cant vote your own answer!', 'warning')
+        })
+    },
+    downvoteAnswer (context, payload) {
+      let token = localStorage.getItem('token')
+      axios.put(baseUrl + `/answers/downvote/${payload}`, {}, {
+        headers: {
+          token: token
+        }
+      })
+        .then(upvoted => {
+          swal('OMG!', 'Why you downvote? Sad :(', 'warning')
         })
         .catch(err => {
           swal('Ups!', err.response.data.message, 'warning')

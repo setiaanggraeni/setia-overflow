@@ -3,8 +3,6 @@ const Question = require('../models/question')
 
 class AnswerController {
   static addAnswer(req, res){
-    console.log('masuk sini answer');
-    
     let questionId = req.params.id
     let {answer} = req.body
         Answer.create({
@@ -68,7 +66,7 @@ class AnswerController {
 
   static edit(req, res){
     let id = req.params.id
-    let answer = req.body
+    let {answer} = req.body
     Answer.findOne({_id: id})
     .then(theAnswer => {
       if(String(theAnswer.userId) == String(req.user._id)){
@@ -78,7 +76,9 @@ class AnswerController {
           }
         })
         .then(updateAnswer => {
-          res.status(201).json('Update answer successfully!')
+          res.status(201).json({
+            message: 'Update answer successfully!'
+          })
         })
         .catch(err => {
           res.status(400).json({
@@ -115,6 +115,7 @@ class AnswerController {
         })
         .catch(err => {
           res.status(400).json({
+            err,
             message: 'Upvote failed!'
           })
         })

@@ -19,6 +19,7 @@ class QuestionController{
 
   static getAllQuestion(req, res){
     Question.find({})
+    .sort({updatedAt: 'descending'})
     .populate('answerId')
     .populate('userId')
     .populate('downvote')
@@ -80,6 +81,8 @@ class QuestionController{
     let id = req.params.id
     Question.findOne({_id: id})
     .then(question => {
+      console.log('masuk sini', question)
+      console.log('masuk sini===', req.user._id)
       if(String(question.userId._id) == String(req.user._id)){
         Question.deleteOne({_id: id})
         .then(deletedQuestion => {

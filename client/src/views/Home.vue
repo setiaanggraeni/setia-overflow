@@ -6,13 +6,14 @@
     <div class="container">
       <div v-if="postQuestionTrue">
         <div class="row">
-          <div class="col-sm-6" id="boxLeft">
+          <div class="col-sm-4" id="boxLeft">
             <Questions/>
           </div>
-          <div class="col-sm-6" id="boxRight">
+          <div class="col-sm-8" id="boxRight">
             <div v-if="questionTrue">
               <TheQuestion :commenttrue="this.commenttrue" :seen="this.seen"/>
               <EditQuestion/>
+              <EditComment/>
             </div>
             <div v-else>
 
@@ -37,11 +38,13 @@ import {mapState, mapActions} from 'vuex'
 import TheQuestion from '@/components/TheQuestion.vue'
 import PostQuestion from '@/components/PostQuestion.vue'
 import EditQuestion from '@/components/EditQuestion.vue'
+import EditComment from '@/components/EditComment.vue'
+import axios from 'axios'
 
 export default {
   name: 'home',
   components: {
-    Navbars, Login, Register, Questions, TheQuestion, PostQuestion, EditQuestion
+    Navbars, Login, Register, Questions, TheQuestion, PostQuestion, EditQuestion, EditComment
   },
   watch: {
     isLogin (val) {
@@ -113,6 +116,7 @@ export default {
     if (this.$route.params.id !== undefined) {
       this.getById(this.$route.params.id)
     }
+    
   },
   methods: {
     ...mapActions([
