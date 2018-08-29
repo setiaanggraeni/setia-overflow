@@ -16,7 +16,7 @@
               <EditComment/>
             </div>
             <div v-else>
-
+              <TheQuestion/>
             </div>
           </div>
         </div>
@@ -57,20 +57,14 @@ export default {
       this.commenttrue = val
     },
     '$route' (to, from) {
-      if (this.$route.params.id !== undefined) {
-        this.postQuestionTrue = true
-        this.getById(this.$route.params.id)
-      } else {
+      if (!this.$route.params.id) {
         this.getAllQuestions()
-      }
-    },
-    detailsQuestion (val) {
-      this.getById(val._id)
+      } 
     }
   },
   computed: {
     ...mapState([
-      'isLogin', 'questions', 'questionTrue', 'detailsQuestion', 'commenttrue', 'postQuestionTrue', 'seen'
+      'isLogin', 'questions', 'questionTrue', 'detailsQuestion', 'commenttrue', 'postQuestionTrue', 'seen', 'rightBox'
     ]),
     isLogin: {
       get () {

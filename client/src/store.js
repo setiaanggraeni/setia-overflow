@@ -74,6 +74,9 @@ export default new Vuex.Store({
     },
     setNewUser (state, payload) {
       state.newUser = payload
+    },
+    setForRightBox (state, payload) {
+      state.detailsQuestion = payload
     }
   },
   actions: {
@@ -123,6 +126,8 @@ export default new Vuex.Store({
       axios.get(baseUrl + '/questions')
         .then(questions => {
           context.commit('setGetAllQuestions', questions.data)
+          context.commit('setForRightBox', questions.data[0])
+          this.state.questionTrue = false
         })
         .catch(err => {
           console.log(err)
@@ -132,6 +137,7 @@ export default new Vuex.Store({
       axios.get(baseUrl + `/questions/find/${payload}`)
         .then(question => {
           context.commit('setGetById', question.data)
+          this.state.questionTrue = true
         })
         .catch(err => {
           swal('Ups!', err.response.data.message, 'warning')
@@ -360,6 +366,6 @@ export default new Vuex.Store({
         .catch(err => {
           console.log(err)
         })
-    },
+    }
   }
 })

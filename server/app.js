@@ -11,7 +11,9 @@ var cors = require('cors')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var answersRouter = require('./routes/answer')
+var cron = require('./cronjob/cronjob')
 
+cron()
 var app = express();
 app.use(cors())
 
