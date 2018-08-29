@@ -60,6 +60,8 @@ export default {
       if (this.$route.params.id !== undefined) {
         this.postQuestionTrue = true
         this.getById(this.$route.params.id)
+      } else {
+        this.getAllQuestions()
       }
     },
     detailsQuestion (val) {

@@ -16,6 +16,8 @@
             <input type="password" class="form-control" v-model="password" placeholder="Enter password">
           </div>
           <div class="modal-footer">
+            <div class="g-signin2" data-onsuccess="onSignIn"></div>
+            <small id="register" class="form-text text-muted"><img src="../assets/facebook.png" width="150px" id="fbicon" @click="loginFb" data-dismiss="modal"/></small>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             <button type="button" class="btn btn-primary" @click="login" data-dismiss="modal">Login</button>
           </div>
@@ -52,8 +54,16 @@ export default {
   },
   methods: {
     ...mapActions([
-      'login'
-    ])
+      'login', 'loginFb'
+    ]),
+    onSignIn(googleUser) {
+      console.log('huhu')
+      var profile = googleUser.getBasicProfile()
+      console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+      console.log('Name: ' + profile.getName());
+      console.log('Image URL: ' + profile.getImageUrl());
+      console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+    }
   }
 }
 </script>

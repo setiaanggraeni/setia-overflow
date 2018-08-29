@@ -2,7 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import router from './router'
-// import swal from 'sweetalert'
+import {provider, auth} from '@/firebase.js'
+
 var baseUrl = 'http://localhost:3000'
 
 Vue.use(Vuex)
@@ -66,6 +67,9 @@ export default new Vuex.Store({
     },
     setSeen (state, payload) {
       state.seen = payload
+    },
+    setQuestionTrue (state, payload) {
+      state.questionTrue = payload
     }
   },
   actions: {
@@ -79,9 +83,9 @@ export default new Vuex.Store({
       })
         .then(userLogin => {
           localStorage.setItem('token', userLogin.data.token)
-          this.state.isLogin = false
-          this.state.commenttrue = true
-          this.state.seen = true
+          context.commit('setIsLogin', false)
+          context.commit('setCommentTrue', true)
+          context.commit('setSeen', true)
         })
         .catch(err => {
           swal('Ups!', err.response.data.message, 'warning')
@@ -103,15 +107,14 @@ export default new Vuex.Store({
     },
     logout (context) {
       localStorage.clear()
-      this.state.isLogin = true
-      this.state.commenttrue = false
-      this.state.seen = false
+      context.commit('setIsLogin', true)
+      context.commit('setCommentTrue', false)
+      context.commit('setSeen', false)
     },
     getAllQuestions (context) {
       axios.get(baseUrl + '/questions')
         .then(questions => {
           context.commit('setGetAllQuestions', questions.data)
-          // console.log('di store=====', this.state.questions)
         })
         .catch(err => {
           console.log(err)
@@ -156,6 +159,7 @@ export default new Vuex.Store({
         .then(commentDel => {
           console.log('Question deleted!')
           router.push('/')
+          this.state.questionTrue = false
         })
         .catch(err => {
           console.log(err)
@@ -166,7 +170,6 @@ export default new Vuex.Store({
       this.state.dataEditAnswer = payload
     },
     editAnswer (context, payload) {
-      console.log(payload)
       let token = localStorage.getItem('token')
       axios.put(baseUrl + `/answers/edit/${payload._id}`, {
         answer: payload.answer
@@ -257,7 +260,8 @@ export default new Vuex.Store({
         .then(newQuestion => {
           this.state.title = ''
           this.state.theQuestion = ''
-          this.state.postQuestionTrue = true
+          // this.state.postQuestionTrue = true
+          context.dispatch('getAllQuestions')
           swal('Posted!', 'Thank you for submitting question!', 'success')
         })
         .catch(err => {
@@ -292,6 +296,27 @@ export default new Vuex.Store({
         .catch(err => {
           swal('Ups!', err.response.data.message, 'warning')
         })
+    },
+    loginFb (context) {
+      auth.signInWithPopup(provider).then(function (result) {
+        var token = result.credential.accessToken
+        axios({
+          method: 'POST',
+          url: baseUrl + '/users/loginFb',
+          data: {
+            fbToken: token
+          }
+        })
+          .then(response => {
+            context.commit('setIsLogin', false)
+            context.commit('setCommentTrue', true)
+            context.commit('setSeen', true)
+            localStorage.setItem('token', response.data.token)
+          })
+          .catch(err => {
+            swal('Ups!', err.response.data.message, 'warning')
+          })
+      })
     }
   }
 })

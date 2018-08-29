@@ -126,7 +126,7 @@ class QuestionController{
         Question.update({_id : id}, {
           $addToSet: {upvote: req.user._id},
           $pull: {downvote: req.user._id},
-          $set: {votes: question.upvote.length}
+          $inc: {votes: 1}
         })
         .then(result => {
           res.status(201).json(result)
@@ -158,7 +158,7 @@ class QuestionController{
         Question.update({_id : id}, {
           $addToSet: {downvote: req.user._id},
           $pull: {upvote: req.user._id},
-          $set: {votes: question.upvote.length}
+          $inc: {votes: -1}
         })
         .then(result => {
           res.status(201).json(result)
