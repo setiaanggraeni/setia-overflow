@@ -4,7 +4,7 @@ import axios from 'axios'
 import router from './router'
 import {provider, auth} from '@/firebase.js'
 
-var baseUrl = 'http://localhost:3000'
+var baseUrl = 'https://server-hacktiv-overflow.setiaanggraeni.co'
 
 Vue.use(Vuex)
 
@@ -210,6 +210,7 @@ export default new Vuex.Store({
         }
       })
         .then(newComment => {
+          context.dispatch('getById', payload)
           console.log('thank you for the comment')
           this.state.inputComment = ''
         })
@@ -225,6 +226,7 @@ export default new Vuex.Store({
         }
       })
         .then(commentDel => {
+          context.dispatch('getAllQuestions')
           console.log('Answer deleted!')
 
         })
@@ -240,6 +242,7 @@ export default new Vuex.Store({
         }
       })
         .then(upvoted => {
+          context.dispatch('getById', payload)
           swal('Yeayyy!', 'Thanks for like!', 'success')
         })
         .catch(err => {
@@ -254,6 +257,7 @@ export default new Vuex.Store({
         }
       })
         .then(upvoted => {
+          context.dispatch('getById', payload)
           swal('OMG!', 'Why you downvote? Sad :(', 'warning')
         })
         .catch(err => {
@@ -292,6 +296,7 @@ export default new Vuex.Store({
         }
       })
         .then(upvoted => {
+          context.dispatch('getAllQuestions')
           swal('Yeayyy!', 'Thanks for like!', 'success')
         })
         .catch(err => {
@@ -307,6 +312,7 @@ export default new Vuex.Store({
         }
       })
         .then(upvoted => {
+          context.dispatch('getAllQuestions')
           swal('OMG!', 'Why you downvote? Sad :(', 'warning')
         })
         .catch(err => {
