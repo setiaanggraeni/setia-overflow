@@ -82,6 +82,15 @@ export default new Vuex.Store({
   actions: {
     search (context) {
       console.log(this.state.searchBy)
+      axios.get(baseUrl + `/questions/search?q=${this.state.searchBy}`)
+        .then(questions => {
+          context.commit('setGetAllQuestions', questions.data)
+          context.commit('setForRightBox', questions.data[0])
+          this.state.questionTrue = false
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     login (context) {
       axios.post(baseUrl + '/users/login', {

@@ -17,7 +17,7 @@
         </ul>
         <form class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" v-model="searchBy" v-on:keyup.enter="search" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" @click="search" type="submit">Search</button>
+          <button class="btn btn-outline-success my-2 my-sm-0" @click.prevent="search" type="submit">Search</button>
           <div v-if="isLogin">
             <button class="btn my-2 my-sm-0" type="submit" data-toggle="modal" data-target="#modalLogin">Login</button>
             <button class="btn my-2 my-sm-0" type="submit" data-toggle="modal" data-target="#modalRegister">Register</button>
